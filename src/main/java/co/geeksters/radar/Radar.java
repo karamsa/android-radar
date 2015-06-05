@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.location.Location;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -36,7 +35,7 @@ public class Radar extends View {
     private final int DEFAULT_CENTER_PIN_COLOR = getResources().getColor(R.color.red);
     private final int DEFAULT_BACKGROUND_COLOR = getResources().getColor(R.color.dark_green);
 
-    private  int pinImage;
+    private  int pinsImage;
     private  int centerPinImage;
 
     private  int radarBackground ;
@@ -67,9 +66,9 @@ public class Radar extends View {
             pinsRadius = ta.getInt(R.styleable.radar_pins_radius, 0);
             centerPinRadius = ta.getInt(R.styleable.radar_center_pin_radius, 0);
 
-            radarBackground = ta.getResourceId(R.styleable.radar_radar_background, 0);
-//            pinImage = ta.getResourceId(R.styleable.rad, 0);
-//            centerPinImage = ta.getResourceId(R.styleable.radar_radar_background, 0);
+            radarBackground = ta.getResourceId(R.styleable.radar_radar_image, 0);
+            pinsImage = ta.getResourceId(R.styleable.radar_pins_image, 0);
+            centerPinImage = ta.getResourceId(R.styleable.radar_center_pin_image, 0);
 
             if (ta.getString(R.styleable.radar_pins_color) != null) {
                 pinsColor = Color.parseColor(ta.getString(R.styleable.radar_pins_color));
@@ -102,13 +101,17 @@ public class Radar extends View {
         int width = getWidth();
 
         if (radarBackground != 0) {
-            Bitmap myBitmap = BitmapFactory.decodeResource(getResources(), radarBackground);
-            canvas.drawBitmap(myBitmap, null, new Rect(0,0,width, width), null);
+            drawImage(0, 0, radarBackground, width);
         }else{
             drawPin(width / 2, width / 2, getBackgroundColor(), width / 2);
         }
 
-        drawPin(width / 2, width / 2, getCenterPinColor(), getCenterPinRadius());
+        if (centerPinImage != 0) {
+            long pnt = (width / 2) - getCenterPinRadius();
+            drawImage(pnt,pnt, centerPinImage, getCenterPinRadius()*2);
+        }else{
+            drawPin(width / 2, width / 2, getCenterPinColor(), getCenterPinRadius());
+        }
 
         int pxCanvas = width/2;
         int metterDistance ;
@@ -161,7 +164,15 @@ public class Radar extends View {
 
             pinsInCanvas.add(new RadarPoint(points.get(i).identifier, cX, cY, getPinsRadius()));
 
-            drawPin(cX, cY, getPinsColor(), getPinsRadius());
+            if (pinsImage != 0) {
+                long pnt = cX - getPinsRadius();
+                long pnt2 = cY - getPinsRadius();
+                drawImage(pnt, pnt2, pinsImage, getPinsRadius()*2);
+            }else{
+                drawPin(cX, cY, getPinsColor(), getPinsRadius());
+            }
+
+
         }
     }
 
@@ -184,6 +195,14 @@ public class Radar extends View {
         float d = R * c * 1000;
 
         return d;
+    }
+
+    public void drawImage(long x, long y, int image,int size){
+        Bitmap myBitmap = BitmapFactory.decodeResource(getResources(), image);
+
+        Bitmap scaledBitmap =  Bitmap.createScaledBitmap(myBitmap, size, size, true);
+
+        canvas.drawBitmap( scaledBitmap, x, y, null);
     }
 
     public void drawPin(long x, long y, int Color,int radius){
