@@ -24,6 +24,14 @@ public class Radar extends View {
     private Context context;
     private Canvas canvas;
 
+    public void setPoints(ArrayList<RadarPoint> points) {
+        this.points = points;
+    }
+
+    public ArrayList<RadarPoint> getPoints() {
+        return points;
+    }
+
     private ArrayList<RadarPoint> points;
 
 
@@ -57,7 +65,7 @@ public class Radar extends View {
 
     public Radar(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        this.context =context;
+        this.context = context;
 
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.radar, 0, 0);
 
@@ -96,7 +104,7 @@ public class Radar extends View {
 
         pinsInCanvas = new ArrayList<RadarPoint>();
 
-        points = new ArrayList<RadarPoint>();
+
 
         int width = getWidth();
 
@@ -120,9 +128,7 @@ public class Radar extends View {
 
         int x0 = width / 2;
 
-        points.add(new RadarPoint("hassan", 10.00200f,22.0000f));
-        points.add(new RadarPoint("fetouaki", 10.00220f,22.0000f));
-        points.add(new RadarPoint("kolopero", 10.00420f,22.0010000f));
+
 
         Location u0 = new Location("");
         u0.setLatitude(10.00100);
