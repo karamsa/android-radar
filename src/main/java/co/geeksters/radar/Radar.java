@@ -104,8 +104,6 @@ public class Radar extends View {
 
         pinsInCanvas = new ArrayList<RadarPoint>();
 
-
-
         int width = getWidth();
 
         if (radarBackground != 0) {
