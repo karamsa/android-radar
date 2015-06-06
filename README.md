@@ -51,7 +51,7 @@ In your activity, to create points or pin in this radar:
 That's is all :) 
 
 
-#### Advenced use:
+#### Advenced usages:
 
 Other Attributes:
 
