@@ -23,6 +23,7 @@ public class Radar extends View {
     private ArrayList<RadarPoint> pinsInCanvas = new ArrayList<RadarPoint>();
     private Context context;
     private Canvas canvas;
+    private int zoomDistance;
 
     public void setPoints(ArrayList<RadarPoint> points) {
         this.points = points;
@@ -32,7 +33,9 @@ public class Radar extends View {
         return points;
     }
 
-    private ArrayList<RadarPoint> points;
+    private ArrayList<RadarPoint> points  = new ArrayList<RadarPoint>();
+
+    private RadarPoint referencePoint;
 
 
     private final int DEFAULT_MAX_DISTANCE = 10000;
@@ -67,6 +70,8 @@ public class Radar extends View {
         super(context, attrs, defStyle);
         this.context = context;
 
+        referencePoint = new RadarPoint("example", 10.00000f,22.0000f);
+
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.radar, 0, 0);
 
         try {
@@ -97,11 +102,17 @@ public class Radar extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        // TODO Auto-generated method stub
         super.onDraw(canvas);
 
         this.canvas = canvas;
+        makeRadar();
+    }
 
+    public void refresh() {
+        invalidate();
+    }
+
+    protected void makeRadar() {
         pinsInCanvas = new ArrayList<RadarPoint>();
 
         int width = getWidth();
@@ -124,17 +135,26 @@ public class Radar extends View {
 
         maxDistance = getMaxDistance();
 
-        int x0 = width / 2;
-
-
-
         Location u0 = new Location("");
-        u0.setLatitude(10.00100);
-        u0.setLongitude(22.0000);
+        u0.setLatitude(referencePoint.x);
+        u0.setLongitude(referencePoint.y);
+
+        ArrayList<Location> locations = buildLocations(u0);
+
+
+        metterDistance = zoomDistance + (zoomDistance/16);
+        if (metterDistance > maxDistance) metterDistance = maxDistance;
+
+        drawPins(u0, locations, pxCanvas, metterDistance);
+
+    }
+
+
+    ArrayList<Location> buildLocations(Location referenceLocation){
+
+        zoomDistance = 0;
 
         ArrayList<Location> locations = new ArrayList<Location>();
-
-        int zoomDistance = 0;
 
         for (int i = 0; i < points.size(); i++) {
 
@@ -143,19 +163,21 @@ public class Radar extends View {
             uLocation.setLongitude(points.get(i).y);
             locations.add(uLocation);
 
-            if (zoomDistance < distanceBetween(u0, uLocation)) {
-                zoomDistance = Math.round(distanceBetween(u0, uLocation));
+            if (zoomDistance < distanceBetween(referenceLocation, uLocation)) {
+                zoomDistance = Math.round(distanceBetween(referenceLocation, uLocation));
             }
         }
 
-        metterDistance = zoomDistance + (zoomDistance/16);
-        if (metterDistance > maxDistance) metterDistance = maxDistance;
+        return locations ;
+    }
+
+    void drawPins(Location referenceLocation, ArrayList<Location> locations, int pxCanvas, int metterDistance){
 
         Random rand = new Random();
 
         for (int i = 0; i < locations.size(); i++) {
 
-            int distance = Math.round(distanceBetween(u0, locations.get(i)));
+            int distance = Math.round(distanceBetween(referenceLocation, locations.get(i)));
 
             if (distance > maxDistance) continue;
 
@@ -163,8 +185,8 @@ public class Radar extends View {
 
             int angle = rand.nextInt(360)+1;
 
-            long cX = x0 + Math.round(virtualDistance*Math.cos(angle*Math.PI/180));
-            long cY = x0 + Math.round(virtualDistance*Math.sin(angle * Math.PI / 180));
+            long cX = pxCanvas + Math.round(virtualDistance*Math.cos(angle*Math.PI/180));
+            long cY = pxCanvas + Math.round(virtualDistance*Math.sin(angle * Math.PI / 180));
 
             pinsInCanvas.add(new RadarPoint(points.get(i).identifier, cX, cY, getPinsRadius()));
 
@@ -175,8 +197,6 @@ public class Radar extends View {
             }else{
                 drawPin(cX, cY, getPinsColor(), getPinsRadius());
             }
-
-
         }
     }
 
@@ -280,5 +300,10 @@ public class Radar extends View {
         if (maxDistance == 0) return DEFAULT_MAX_DISTANCE;
         if (maxDistance < 0) return 1000000000;
         return maxDistance;
+    }
+
+
+    public void setReferencePoint(RadarPoint referencePoint) {
+        this.referencePoint = referencePoint;
     }
 }
