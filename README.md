@@ -1,6 +1,9 @@
 # Android Radar
 The simple way to make radar in your Android app.
 
+![alt tag](https://github.com/karamsa/android-radar/blob/master/screen_1.png)            
+![alt tag](https://github.com/karamsa/android-radar/blob/master/screen_2.png)
+
 ### Installation:
 
 1) Go to:
@@ -48,7 +51,7 @@ In your activity, to create points or pin in this radar:
 That's is all :) 
 
 
-#### Advenced use:
+#### Advenced usages:
 
 Other Attributes:
 
