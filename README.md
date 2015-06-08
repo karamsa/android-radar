@@ -1,8 +1,10 @@
 # Android Radar
 The simple way to make radar in your Android app.
+<p align="center">
+<img src="https://github.com/karamsa/android-radar/blob/master/screen_1.png"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="https://github.com/karamsa/android-radar/blob/master/screen_2.png"/>
 
-![alt tag](https://github.com/karamsa/android-radar/blob/master/screen_1.png)            
-![alt tag](https://github.com/karamsa/android-radar/blob/master/screen_2.png)
+</p>
 
 ### Installation:
 
@@ -11,13 +13,13 @@ The simple way to make radar in your Android app.
 File -> Import Module -> choose the folder "radar".
 
 2) add this to your gradle file :
-
+```java
 	compile project(':radar')
-
+```
 ### Usages:
 
 In your xml import an extra namespace on the root of your layout for example "whatever", like this:
-
+```xml
 	<?xml version="1.0" encoding="utf-8"?>
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	    xmlns:whatever="http://schemas.android.com/apk/res-auto"
@@ -26,20 +28,24 @@ In your xml import an extra namespace on the root of your layout for example "wh
 	    <!-- Your actual layout -->
 	    ....
 	</LinearLayout>
-	
+```
 Whenever you need to use the Radar just do the following in your xml.
-
+```xml
     <co.geeksters.radar.Radar
         android:id="@+id/radar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
-        
+ ```
     
 In your activity, to create points or pin in this radar: 
-
+```java
     radar = (co.geeksters.radar.Radar) findViewById(R.id.radar);
     
+    //And here set the reference Point (or for exemple your GPS location)
+    radar.setReferencePoint(new RadarPoint("myLocation", 10.00000f,22.0000f));
+    
+    // the other points in the Radar
     ArrayList<RadarPoint> points = new ArrayList<RadarPoint>();
 
     points.add(new RadarPoint("identifier1", 10.00200f,22.0000f));
@@ -47,14 +53,13 @@ In your activity, to create points or pin in this radar:
     points.add(new RadarPoint("identifier3", 10.00420f,22.0010f));
     
     radar.setPoints(points);
-
+```
 That's is all :) 
-
 
 #### Advenced usages:
 
 Other Attributes:
-
+```xml
     whatever:center_pin_radius="20" // Radius of the pin in the center
     whatever:pins_radius="20" // Radius of pins on the Radar
     whatever:pins_color="@color/light_green" // Color of pins on the Radar
@@ -66,14 +71,14 @@ Other Attributes:
   
     whatever:max_distance="-1" //  Max distance by metters to cover, -1 to infinit, default velue is 10000
 
-
+```
 
   
 
 #### handle clicks:
 
 To handle Pin's clicks on the Radar:
-
+```java
     radar.setOnTouchListener(new View.OnTouchListener() {
       @Override
       public boolean onTouch(View v, MotionEvent event) {
@@ -84,6 +89,11 @@ To handle Pin's clicks on the Radar:
           return true;
       }
     });
-    
-  This will not include the center pin.
-
+ ```  
+PS: This will not include the center pin.
+ 
+#### Refresh the radar:
+After changes you can call refresh method to remake the Radar:
+```java
+    radar.refresh();
+```
