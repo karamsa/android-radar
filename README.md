@@ -10,11 +10,11 @@ The simple way to make radar in your Android app.
 
 1) Go to:
   
-File -> Import Module -> choose the folder "radar".
+File -> Import Module -> choose the folder "android-radar-master".
 
 2) add this to your gradle file :
 ```java
-	compile project(':radar')
+	compile project(':android-radar-master')
 ```
 ### Usages:
 
