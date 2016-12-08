@@ -181,7 +181,10 @@ public class Radar extends View {
 
             if (distance > maxDistance) continue;
 
-            int virtualDistance = (distance * pxCanvas / metterDistance) ;
+            int virtualDistance = 1;
+            if (metterDistance > 0){
+                virtualDistance = (distance * pxCanvas / metterDistance) ;
+            }
 
             int angle = rand.nextInt(360)+1;
 
