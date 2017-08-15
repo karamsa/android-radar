@@ -264,7 +264,7 @@ public class Radar extends View {
 
         for (RadarPoint rPoint : pinsInCanvas) {
 
-            if ((rPoint.x - xTouch) * (rPoint.x - xTouch) + (rPoint.y - yTouch) * (rPoint.y - yTouch) <= rPoint.radius * rPoint.radius * (rPoint.radius/2)) {
+            if ((rPoint.x - xTouch) * (rPoint.x - xTouch) + (rPoint.y - yTouch) * (rPoint.y - yTouch) <= rPoint.radius * rPoint.radius) {
                 touched = rPoint;
                 break;
             }
